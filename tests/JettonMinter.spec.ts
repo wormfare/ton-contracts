@@ -120,10 +120,27 @@ describe('JettonMinter', () => {
         });
 
         it('admin cannot mint more than 300,000,000 tokens', async () => {
+            const res = await minterContract.sendMint(
+                adminWallet.getSender(),
+                ownerWallet.address,
+                toNano('300000000') + 1n,
+                toNano('0.05'),
+                toNano('0.1'),
+            );
+
+            expect(res.transactions).toHaveTransaction({
+                from: adminWallet.address,
+                to: minterContract.address,
+                success: false,
+                exitCode: 101,
+            });
+        });
+
+        it('admin cannot mint tokens if the total supply is above zero', async () => {
             await minterContract.sendMint(
                 adminWallet.getSender(),
                 ownerWallet.address,
-                toNano('300000000'),
+                1n,
                 toNano('0.05'),
                 toNano('0.1'),
             );
@@ -139,7 +156,7 @@ describe('JettonMinter', () => {
                 from: adminWallet.address,
                 to: minterContract.address,
                 success: false,
-                exitCode: 101,
+                exitCode: 100,
             });
         });
 

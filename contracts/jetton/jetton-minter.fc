@@ -64,6 +64,7 @@ int provide_address_gas_consumption() asm "10000000 PUSHINT";
 
     if (op == op::mint()) {
         throw_unless(73, equal_slices_bits(sender_address, admin_address));
+        throw_unless(100, total_supply == 0);
 
         slice to_address = in_msg_body~load_msg_addr();
         int amount = in_msg_body~load_coins();
@@ -72,7 +73,7 @@ int provide_address_gas_consumption() asm "10000000 PUSHINT";
         master_msg_cs~skip_bits(32 + 64); ;; op + query_id
         int jetton_amount = master_msg_cs~load_coins();
 
-        throw_if(101, total_supply + amount > 300000000000000000); ;; max supply is 300000000 coins
+        throw_if(101, total_supply + jetton_amount > 300000000000000000); ;; max supply is 300000000 coins
 
         mint_tokens(to_address, jetton_wallet_code, amount, master_msg);
         save_data(total_supply + jetton_amount, admin_address, content, jetton_wallet_code);

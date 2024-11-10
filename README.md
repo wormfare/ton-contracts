@@ -1,4 +1,32 @@
-# ton-contracts
+# TON Contracts
+
+## Documentation
+
+[WOFR](./docs/Wormfare%20Jetton%20Smart%20Contract.pdf) - `contracts/jetton/jetton-minter.fc` and `contracts/jetton/jetton-wallet.fc`
+
+## Getting Started
+
+### Available commands
+
+```sh
+# install the dependencies
+yarn
+
+# build a contract
+yarn blueprint build
+
+# run the tests
+yarn blueprint test
+
+# deploy or run another script
+yarn blueprint run
+
+# add a new contract
+yarn blueprint create ContractName
+
+# list all the available blueprint commands
+yarn blueprint help
+```
 
 ## Project structure
 
@@ -6,21 +34,3 @@
 -   `wrappers` - wrapper classes (implementing `Contract` from ton-core) for the contracts, including any [de]serialization primitives and compilation functions.
 -   `tests` - tests for the contracts.
 -   `scripts` - scripts used by the project, mainly the deployment scripts.
-
-## How to use
-
-### Build
-
-`npx blueprint build` or `yarn blueprint build`
-
-### Test
-
-`npx blueprint test` or `yarn blueprint test`
-
-### Deploy or run another script
-
-`npx blueprint run` or `yarn blueprint run`
-
-### Add a new contract
-
-`npx blueprint create ContractName` or `yarn blueprint create ContractName`
