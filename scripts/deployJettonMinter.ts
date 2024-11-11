@@ -1,6 +1,8 @@
-import { NetworkProvider } from '@ton/blueprint';
+import { compile, NetworkProvider } from '@ton/blueprint';
 import dotenvFlow from 'dotenv-flow';
 import { join } from 'path';
+import { jettonContentToCell, JettonMinter } from '../wrappers/JettonMinter';
+import { address, toNano } from '@ton/core';
 
 export async function run(provider: NetworkProvider) {
     const envFile = `.env.${provider.network()}`;
@@ -27,24 +29,22 @@ export async function run(provider: NetworkProvider) {
         throw new Error(`Owner address is empty.`);
     }
 
-    return;
+    const content = jettonContentToCell({ type: 0, uri: metadataUrl });
+    const wallet_code = await compile('JettonWallet');
 
-    // const content = jettonContentToCell({ type: 0, uri: metadataUrl });
-    // const wallet_code = await compile('JettonWallet');
+    const minter = provider.open(
+        JettonMinter.createFromConfig(
+            { admin: address(adminAddress), content, wallet_code },
+            await compile('JettonMinter'),
+        ),
+    );
 
-    // const minter = provider.open(
-    //     JettonMinter.createFromConfig(
-    //         { admin: address(adminAddress), content, wallet_code },
-    //         await compile('JettonMinter'),
-    //     ),
-    // );
+    await minter.sendDeploy(provider.sender(), toNano('0.1'));
+    await provider.waitForDeploy(minter.address);
 
-    // await minter.sendDeploy(provider.sender(), toNano('0.1'));
-    // await provider.waitForDeploy(minter.address);
+    console.log(`Minting 300M tokens to ${ownerAddress}`);
 
-    // console.log(`Minting 300M tokens to ${ownerAddress}`);
+    await minter.sendMint(provider.sender(), address(ownerAddress), toNano('300000000'), toNano('0.05'), toNano('0.1'));
 
-    // await minter.sendMint(provider.sender(), address(ownerAddress), toNano('300000000'), toNano('0.05'), toNano('0.1'));
-
-    // console.log('Done');
+    console.log('Done');
 }
