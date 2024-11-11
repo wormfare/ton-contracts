@@ -23,7 +23,7 @@ describe('JettonMinter', () => {
     beforeAll(async () => {
         minterCode = await compile('JettonMinter');
         walletCode = await compile('JettonWallet');
-        minterContent = jettonContentToCell({ type: 1, uri: metadataUrl });
+        minterContent = jettonContentToCell({ type: 0, uri: metadataUrl });
     });
 
     beforeEach(async () => {
