@@ -29,7 +29,7 @@ export async function run(provider: NetworkProvider) {
         throw new Error(`Owner address is empty.`);
     }
 
-    const content = jettonContentToCell({ type: 0, uri: metadataUrl });
+    const content = jettonContentToCell({ type: 1, uri: metadataUrl });
     const wallet_code = await compile('JettonWallet');
 
     const minter = provider.open(
